@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 '''
-This script returns the a cleaned format of the wav path of MELD utterances
+This script returns the cleaned format of the wav path of MELD utterances
 RETURNS:
 final_datameld.csv
 '''

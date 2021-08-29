@@ -1241,7 +1241,6 @@ print(end - start)
 Returns:
 73.09745860099792
 '''
-
 start = time.time()
 rfling.fit(X_trainl,y_trainl)
 rfall.fit(X_trainff, y_trainff)

@@ -363,6 +363,9 @@ def cross_validation(k, x, y):
         result_precision.append(precision_score(y_test, y_pred, average="weighted"))
         result_f1.append(f1_score(y_test, y_pred, average = 'weighted'))
     return sum(result)/len(result),sum(result_recall)/len(result_recall),sum(result_precision)/len(result_precision),sum(result_f1)/len(result_f1)
+
+cross_validation(3, x, y)
+
 '''
 Returns:
 (0.7842261904761906,

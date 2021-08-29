@@ -28,6 +28,7 @@ from sklearn.preprocessing import LabelEncoder
 import tensorflow as tf
 import keras
 import random
+from pytictoc import TicToc
 from keras.models import Sequential, Model
 from keras.layers import Dense, Embedding, Conv1D, MaxPooling1D, AveragePooling1D, BatchNormalization, Input, Flatten, Dropout, Activation
 from keras.utils import to_categorical, np_utils
@@ -865,10 +866,13 @@ def all_around_fusion_cv_all_s_2(k,
         
     return sum(result)/len(result),sum(result_recall)/len(result_recall),sum(result_precision)/len(result_precision),sum(result_f1)/len(result_f1)
 
+t = TicToc() #create instance of class
 all_around_fusion_cv_all_s_2(3,
                         x_ff, y_ff,
                         xl, yl,
                         x,y)
+t.toc()
+
 '''
 Returns:
 (0.7482042321879246,
@@ -1174,12 +1178,19 @@ rfall = RandomForestClassifier(n_estimators=600, min_samples_split=4,
                              criterion = 'entropy', bootstrap = False)
 
 
-X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.30)
-X_trainl, X_testl, y_trainl, y_testl = train_test_split(xl, yl, test_size=0.30)
-X_trainff, X_testff, y_trainff, y_testff = train_test_split(x_ff, y_ff, test_size=0.30)
+train_identifiers = random.sample(range(0, len(x)), round(len(x)*0.7))
+test_identifiers = list(set(range(0, len(x))).difference(set(random.sample(range(0, len(x)), round(len(x)*0.7)))))
+
+X_train, X_test, y_train, y_test = x.iloc[train_identifiers], x.iloc[test_identifiers], y.iloc[train_identifiers], y.iloc[test_identifiers]
+
+X_trainl, X_testl, y_trainl, y_testl = xl.iloc[train_identifiers], xl.iloc[test_identifiers], yl.iloc[train_identifiers], yl.iloc[test_identifiers]
+
+X_trainff, X_testff, y_trainff, y_testff = x_ff.iloc[train_identifiers], x_ff.iloc[test_identifiers], y_ff.iloc[train_identifiers], y_ff.iloc[test_identifiers]
+
 rfling.fit(X_trainl,y_trainl)
 rfall.fit(X_trainff, y_trainff)
 rfaud.fit(X_train, y_train)
+
 preds_fu = all_around_fusion_all_s_2(X_trainff, X_testff,
                 y_trainff, y_testff,
                 X_trainl, X_testl,
@@ -1195,6 +1206,57 @@ print(mcnemar(confusion_matrix(preds_fu,preds_ling), exact = False, correction =
 
 '''
 Returns:
-pvalue      1.954938609508094e-21
-statistic   90.39058823529412
+pvalue      0.004057136032371287
+statistic   8.258064516129032
+'''
+
+## timing them 
+
+import time
+
+start = time.time()
+rfaud = RandomForestClassifier(n_estimators=600, min_samples_split=4,
+                                 min_impurity_decrease=0.0, max_features = 'sqrt',max_depth = None, 
+                                 criterion = 'entropy', bootstrap = False)
+rfaud.fit(X_train, y_train)
+rfaud.predict(X_test)
+end = time.time()
+print(end - start)
+
+'''
+Returns:
+22.948561429977417
+'''
+
+start = time.time()
+rfling = RandomForestClassifier(n_estimators=600, min_samples_split=4,
+                             min_impurity_decrease=0.0, max_features = 'sqrt',max_depth = None, 
+                             criterion = 'entropy', bootstrap = False)
+rfling.fit(X_trainl,y_trainl)
+rfling.predict(X_testl)
+end = time.time()
+print(end - start)
+
+'''
+Returns:
+73.09745860099792
+'''
+
+start = time.time()
+rfling.fit(X_trainl,y_trainl)
+rfall.fit(X_trainff, y_trainff)
+rfaud.fit(X_train, y_train)
+preds_fu = all_around_fusion_all_s_2(X_trainff, X_testff,
+                y_trainff, y_testff,
+                X_trainl, X_testl,
+                y_trainl, y_testl,
+                X_train, X_test,
+                y_train, y_test,
+                rfaud, rfling, rfall)
+end = time.time()
+print(end - start)
+
+'''
+Returns:
+278.8575918674469
 '''

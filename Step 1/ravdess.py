@@ -598,40 +598,47 @@ Returns:
 
 # using the play_sample function, the agent was played the following sampled utterances:
 l_cor = ['positive','negative', 'negative', 'negative', 
-    'negative','positive', 'positive', 'negative',
-    'negative','negative', 'positive','negative',
-    'positive','positive','negative','positive',
-    'negative','negative', 'negative','positive',
-    'positive', 'negative', 'positive','negative',
-    'negative', 'negative', 'negative','negative',
-    'positive', 'negative', 'negative', 'negative',
-    'positive', 'negative', 'negative', 'negative', 'positive']
+     'negative','positive', 'positive', 'negative',
+     'negative','negative', 'positive','negative',
+     'positive','positive', 'negative', 'positive',
+     'negative','negative', 'negative','positive',
+     'positive', 'negative', 'positive','negative',
+     'negative', 'negative', 'negative','negative',
+     'positive', 'negative', 'negative', 'negative',
+     'positive', 'negative', 'negative', 'negative',
+     'positive','positive', 'negative', 'negative',
+     'negative', 'positive','negative', 'negative',
+     'negative', 'negative','negative', 'positive',
+     'negative','positive' ]
 
 # the agent gave the following corresponding predictions:
 l_m = ['positive','negative', 'negative', 'negative', 
      'negative','positive', 'negative', 'positive',
-     'negative',
-     'negative', 'negative','negative','negative',
-     'negative', 'negative', 'positive', 'positive', 
-     'negative', 'negative',
-     'negative', 'positive', 'negative', 'negative', 
-     'negative', 'negative', 'negative', 'negative',
-     'negative',
-     'positive', 'negative', 'negative', 'negative', 'negative',
-     'negative', 'negative', 'negative', 'negative']
+     'negative','negative', 'negative','negative',
+     'negative','negative', 'negative', 'positive',
+     'positive','negative', 'negative','negative',
+     'positive', 'negative', 'negative','negative',
+     'negative', 'negative', 'negative','negative',
+     'positive', 'negative', 'negative','negative',
+     'negative','negative', 'negative', 'negative',
+     'negative','positive', 'negative', 'negative',
+     'positive', 'positive','negative', 'negative',
+     'negative', 'negative','positive', 'positive',
+     'positive', 'negative']
 
 # print their results
 print(classification_report(l_cor,l_m))
 
 # plot the grouped bar plot
 listb = [83.11, 83.32,83.13, 83.16]
-lista = [73, 73,65,70]
+lista = [72, 71,66,71]
+# plot the grouped bar plot
 raw_data = {
     # cat:    A                  B                  C                    D
     'x': ['Human Classifier','Human Classifier','Human Classifier','Human Classifier',
           'Acoustic KNN Classifier','Acoustic KNN Classifier','Acoustic KNN Classifier','Acoustic KNN Classifier',
          'Acoustic RF Classifier','Acoustic RF Classifier','Acoustic RF Classifier','Acoustic RF Classifier'],
-    'y': [73, 73,65,70,
+    'y': [72, 71,66,71,
           83.11, 83.32,83.13, 83.16,
          78.42,78.41,77.19,78.18],
     'category': ['Accuracy', 'Weighted Precision', 'Macro Recall', 'Weighted F1 Score',
@@ -642,4 +649,3 @@ sns.set(font_scale = 2, style="whitegrid",rc={"figure.figsize":(14, 10)})
 
 sns.barplot(x='x', y='y', hue='category', data=raw_data)
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-
